@@ -1,7 +1,12 @@
 aid: clean-harbors
-url: https://raw.githubusercontent.com/api-evangelist/clean-harbors/refs/heads/main/apis.yml
+url: 
+  https://raw.githubusercontent.com/api-evangelist/clean-harbors/refs/heads/main/apis.yml
 modified: '2026-03-23'
 apis: []
 common:
   - type: Website
     url: https://www.clean-harbors.com
+description: >-
+  Clean Harbors is a leading provider of environmental and industrial services, offering
+  hazardous waste management, emergency response, industrial cleaning, and environmental
+  remediation services across North America.
