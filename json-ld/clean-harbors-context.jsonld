@@ -1,0 +1,19 @@
+{
+  "@context": {
+    "@vocab": "https://apievangelist.com/vocab/clean-harbors/",
+    "schema": "https://schema.org/",
+    "ch": "https://www.cleanharbors.com/vocab/",
+    "Organization": "schema:Organization",
+    "Service": "schema:Service",
+    "WasteStream": "ch:WasteStream",
+    "Manifest": "ch:HazardousWasteManifest",
+    "Shipment": "schema:ParcelDelivery",
+    "Site": "schema:Place",
+    "Customer": "schema:Organization",
+    "name": "schema:name",
+    "description": "schema:description",
+    "category": "schema:category",
+    "createdAt": "schema:dateCreated",
+    "updatedAt": "schema:dateModified"
+  }
+}

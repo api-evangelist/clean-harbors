@@ -1,0 +1,17 @@
+capabilities:
+  - id: clean-harbors.manage-customer-account
+    name: Manage Clean Harbors customer account
+    description: >-
+      Submit service requests, view manifests and shipments, retrieve
+      invoices and reports, and manage account profile information
+      through the authenticated CLH SaaS customer portal.
+    apis:
+      - clean-harbors:customer-portal
+  - id: clean-harbors.track-hazardous-manifests
+    name: Track hazardous waste manifests
+    description: >-
+      Create, sign, and track federally regulated hazardous-waste
+      manifests through Clean Harbors' integration with the EPA
+      e-Manifest system.
+    apis:
+      - clean-harbors:e-manifest
