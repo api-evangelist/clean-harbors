@@ -50,7 +50,7 @@ Clean Harbors interoperates with the federal EPA e-Manifest system for electroni
 - [Terms of Service](https://www.cleanharbors.com/terms-of-use)
 - [Support](https://www.cleanharbors.com/contact-us)
 - [JSON-LD Context](json-ld/clean-harbors-context.jsonld)
-- [Naftiko Capabilities](naftiko/clean-harbors-capabilities.yml)
+- [Naftiko Capabilities](capabilities/clean-harbors-capabilities.yml)
 
 ## Maintainers
 

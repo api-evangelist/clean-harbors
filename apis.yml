@@ -81,7 +81,7 @@ common:
   - type: JSON-LD
     url: json-ld/clean-harbors-context.jsonld
   - type: Naftiko Capabilities
-    url: naftiko/clean-harbors-capabilities.yml
+    url: capabilities/clean-harbors-capabilities.yml
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
