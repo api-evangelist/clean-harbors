@@ -70,15 +70,15 @@ common:
     url: https://www.safety-kleen.com/
   - type: Investor Relations
     url: https://investors.cleanharbors.com/
-  - type: Privacy Policy
+  - type: PrivacyPolicy
     url: https://www.cleanharbors.com/privacy-policy
-  - type: Terms of Service
+  - type: TermsOfService
     url: https://www.cleanharbors.com/terms-of-use
   - type: Support
     url: https://www.cleanharbors.com/contact-us
-  - type: Status
+  - type: StatusPage
     url: https://www.cleanharbors.com/contact-us
-  - type: JSON-LD
+  - type: JSONLD
     url: json-ld/clean-harbors-context.jsonld
   - type: Naftiko Capabilities
     url: capabilities/clean-harbors-capabilities.yml
