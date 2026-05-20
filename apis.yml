@@ -62,6 +62,8 @@ artifacts:
       manifests under RCRA, which exposes its own public APIs at
       manifest.epa.gov.
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/clean-harbors
   - type: Website
     url: https://www.cleanharbors.com/
   - type: Customer Portal
