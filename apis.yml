@@ -7,7 +7,7 @@ type: Index
 access: 3rd-Party
 position: Consumer
 specificationVersion: '0.19'
-image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
   - Emergency Response
   - Environmental Services
@@ -37,7 +37,7 @@ artifacts:
       - Customer Portal
       - Manifests
       - Service Requests
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://clhsaas.cleanharbors.com/
     properties:
       - url: https://clhsaas.cleanharbors.com/
@@ -52,7 +52,7 @@ artifacts:
       - EPA
       - e-Manifest
       - RCRA
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://www.epa.gov/e-manifest
     properties:
       - url: https://www.epa.gov/e-manifest
