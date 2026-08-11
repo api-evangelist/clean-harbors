@@ -96,8 +96,6 @@ common:
     url: https://www.cleanharbors.com/contact-us
   - type: JSONLD
     url: json-ld/clean-harbors-context.jsonld
-  - type: X-NaftikoCapabilities
-    url: capabilities/clean-harbors-capabilities.yml
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
