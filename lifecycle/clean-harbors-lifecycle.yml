@@ -1,0 +1,71 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  Searched cleanharbors.com, safety-kleen.com, store.safety-kleen.com and
+  careers.cleanharbors.com on 2026-09-05 for a versioning policy, a deprecation policy, an
+  SLA and a status page — none exists. Deprecations below are derived from
+  graphql/clean-harbors-store-schema.graphql, which carries them as real @deprecated
+  directives with reasons written by the platform.
+versioning:
+  policy_published: false
+  scheme: none
+  note: >-
+    Neither callable surface is versioned in its path, media type or headers. The GraphQL
+    schema versions per field: a superseded field is marked @deprecated and a `V2` sibling
+    ships alongside it.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No RFC 8594 Sunset or Deprecation header appeared on any response. Deprecation is
+    signalled only inside the GraphQL schema, where it is machine-readable but carries no
+    removal date. 498 deprecated schema members were counted; the 11 on the root Query and
+    Mutation types are listed below because those are the ones a client actually calls.
+  deprecated_operations:
+    - operation: Query.category
+      replacement: Query.categories
+    - operation: Query.categoryList
+      replacement: Query.categories
+    - operation: Query.customAttributeMetadata
+      replacement: Query.customAttributeMetadataV2
+    - operation: Query.customerOrders
+      replacement: Query.customer
+    - operation: Query.urlResolver
+      replacement: Query.route
+    - operation: Query.wishlist
+      replacement: Customer.wishlist
+    - operation: Mutation.createCustomer
+      replacement: Mutation.createCustomerV2
+    - operation: Mutation.createEmptyCart
+      replacement: Mutation.createGuestCart / Query.customerCart
+    - operation: Mutation.deleteCompanyUser
+      replacement: Mutation.deleteCompanyUserV2
+      note: The deprecated form only deactivates the user rather than deleting it.
+    - operation: Mutation.setPaymentMethodAndPlaceOrder
+      replacement: Mutation.setPaymentMethodOnCart then Mutation.placeOrder
+    - operation: Mutation.updateCustomer
+      replacement: Mutation.updateCustomerV2
+  deprecated_members_total: 498
+  deprecated_root_members: 11
+sla:
+  published: false
+status_page:
+  published: false
+  note: >-
+    Clean Harbors operates no status page for any of its surfaces. The apis.yml record
+    previously carried a StatusPage pointer at https://www.cleanharbors.com/contact-us, which
+    is a phone-and-form contact page and not a status page; that pointer has been removed
+    rather than left standing as a claim the company does not support. The 24-hour emergency
+    response line published on that page (800.645.8265) is an operational hotline for
+    hazardous-materials incidents, not an API incident channel.
+changelog:
+  published: false
+  note: >-
+    No dated API changelog is published. The company publishes press releases at
+    ir.cleanharbors.com and news at cleanharbors.com/about-us/news, neither of which tracks
+    contract changes.
+support:
+  channel: https://www.cleanharbors.com/contact-us
+  developer_channel: none

@@ -1,0 +1,41 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  Registry searches on 2026-09-05 against registry.npmjs.org, pypi.org, rubygems.org,
+  crates.io and packagist.org, plus a review of cleanharbors.com, safety-kleen.com,
+  store.safety-kleen.com, careers.cleanharbors.com and GitHub for a first-party SDK, client
+  library or CLI.
+package_count: 0
+official_count: 0
+note: >-
+  Clean Harbors publishes no client library in any registry, and no SDK, CLI or code sample
+  anywhere on its own sites. Neither callable surface needs one — the Careers Job Query API
+  is plain HTTP GET with JSON, and the commerce endpoint is standard GraphQL — but that is a
+  reason a consumer can get by, not evidence of a developer programme.
+packages: []
+registry_searches:
+  - registry: npm
+    endpoint: https://registry.npmjs.org/-/v1/search
+    queries: [clean-harbors, cleanharbors, safety-kleen, safetykleen]
+    result: no first-party package; all matches are unrelated generic libraries
+  - registry: pypi
+    endpoint: https://pypi.org/pypi/<name>/json
+    queries: [clean-harbors, cleanharbors, safety-kleen, safetykleen]
+    result: HTTP 404 on every name
+  - registry: rubygems
+    endpoint: https://rubygems.org/api/v1/gems/clean-harbors.json
+    result: HTTP 404
+  - registry: crates.io
+    endpoint: https://crates.io/api/v1/crates/cleanharbors
+    result: HTTP 403 (crawler policy); no package found via search either
+  - registry: packagist
+    endpoint: https://packagist.org/search.json?q=safety-kleen
+    result: 0 results
+github:
+  first_party_org: none
+  note: >-
+    No Clean Harbors GitHub organisation exists. api.github.com/orgs/cleanharbors returns
+    404. Four look-alike orgs are registered — cleanharbors-com, clean-harbors-com,
+    CLEAN-HARBORS-INDIA and CLEAN-HARBORS-INDIA-LLP — all four created within a 40-minute
+    window on 2025-08-03, all with empty or near-empty profiles and no linked website. They
+    are not first party and no pointer is wired to any of them.

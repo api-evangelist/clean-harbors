@@ -1,0 +1,33 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Searched cleanharbors.com, safety-kleen.com, store.safety-kleen.com and
+  careers.cleanharbors.com plus llms/clean-harbors-llms.txt for published limits on
+  2026-09-05, and inspected the full response headers of live calls to
+  https://careers.cleanharbors.com/api/mcp/jobs and https://store.safety-kleen.com/graphql.
+limit_count: 0
+published: false
+note: >-
+  Clean Harbors documents no rate limit for either callable surface, and neither surface
+  emits a runtime limit signal. The careers llms.txt — the only agent-facing document the
+  company publishes — describes the Job Query API in detail and says nothing about limits or
+  fair use, so an agent has no way to pace itself except by guessing.
+limits: []
+response_headers_observed:
+  careers-jobs:
+    endpoint: https://careers.cleanharbors.com/api/mcp/jobs
+    ratelimit_headers: []
+    retry_after: false
+    present: [access-control-allow-origin, access-control-allow-methods, cache-control, x-opennext]
+    note: >-
+      cache-control is `no-store` and CORS is `*`. Cloudflare fronts the host, so an
+      undocumented edge limit may exist; none was disclosed in any response we received.
+  commerce-graphql:
+    endpoint: https://store.safety-kleen.com/graphql
+    ratelimit_headers: []
+    retry_after: false
+    present: [x-magento-cache-id, x-served-by, x-cache, x-timer, strict-transport-security]
+    note: >-
+      Fastly fronts the origin. GraphQL query-complexity or depth limits, if configured, are
+      not surfaced in a header and are not documented.
+status_on_exhaustion: unknown

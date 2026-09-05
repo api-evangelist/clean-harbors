@@ -1,0 +1,33 @@
+generated: '2026-09-05'
+method: searched
+source: https://www.cleanharbors.com/contact-us/customer-resources
+plan_count: 0
+published: false
+note: >-
+  Clean Harbors publishes no API pricing, no developer plans and no API sign-up of any kind.
+  It sells environmental and industrial services priced by quote — the customer-facing
+  entry points are telephone lines and a contact form, and the Clean Harbors Online Services
+  (CHOS) portal is described on the company's own site as free to customers with an account
+  rather than as a metered product. The two callable surfaces this repo records are
+  incidental to that business: the Careers Job Query API is free and anonymous, and the
+  Adobe Commerce GraphQL endpoint prices physical goods on store.safety-kleen.com, not API
+  access. Recorded as plan_count 0 rather than omitted, because "no plans published" is the
+  measurement.
+plans: []
+commercial_model:
+  motion: contact-sales / quote
+  self_serve_signup: false
+  free_tier: false
+  api_pricing_page: none
+  evidence:
+    - url: https://www.cleanharbors.com/contact-us/customer-resources
+      status: 200
+      finding: Service ordering is by telephone and form; no pricing or plan table.
+    - url: https://www.cleanharbors.com/chos-reference-guides
+      status: 200
+      finding: >-
+        CHOS portal described as a customer account benefit; no plan tiers, quotas or
+        overage terms.
+    - url: https://careers.cleanharbors.com/api/mcp/jobs
+      status: 200
+      finding: Anonymous and free; no key, no quota, no plan.

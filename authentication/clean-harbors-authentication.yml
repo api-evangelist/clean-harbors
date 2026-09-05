@@ -1,0 +1,74 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  Derived on 2026-09-05 from graphql/clean-harbors-store-schema.graphql (introspected live
+  from https://store.safety-kleen.com/graphql) and from live unauthenticated calls against
+  https://store.safety-kleen.com/rest/ and https://careers.cleanharbors.com/api/mcp/jobs.
+  Clean Harbors publishes no developer authentication documentation, so nothing here is
+  quoted from the provider — every statement is an observation of a response we received.
+note: >-
+  GraphQL has no securitySchemes block, so this profile is reconstructed from the schema's
+  own token mutations and from the status codes the endpoints actually returned.
+schemes:
+  - id: careers-anonymous
+    surface: Careers Job Query API
+    endpoint: https://careers.cleanharbors.com/api/mcp/jobs
+    type: none
+    description: >-
+      No credential of any kind. Every one of the four tools was called anonymously on
+      2026-09-05 and returned HTTP 200. CORS is wide open
+      (access-control-allow-origin: *), so a browser-resident agent can call it directly.
+    verified: probed
+  - id: commerce-graphql-anonymous
+    surface: Clean Harbors / Safety-Kleen commerce GraphQL
+    endpoint: https://store.safety-kleen.com/graphql
+    type: none
+    description: >-
+      The catalog, CMS, store-configuration and guest-cart portion of the schema answers
+      with no credential. Full schema introspection is also anonymous and enabled — the
+      entire 861-type contract was read without a token.
+    verified: probed
+  - id: commerce-graphql-customer-token
+    surface: Clean Harbors / Safety-Kleen commerce GraphQL
+    endpoint: https://store.safety-kleen.com/graphql
+    type: http
+    scheme: bearer
+    header: Authorization
+    format: 'Bearer <customer token>'
+    description: >-
+      Customer-scoped fields (customer, customerCart, customerOrders, company,
+      negotiableQuotes, requisition lists, purchase orders, wishlists) require a customer
+      token. The schema issues one via the generateCustomerToken mutation and revokes it via
+      revokeCustomerToken; generateCustomerTokenAsAdmin exists for delegated impersonation.
+      There is no client-credentials, no OAuth authorization-code flow, and no
+      dynamic client registration in the contract.
+    token_mutations:
+      issue: generateCustomerToken
+      issue_delegated: generateCustomerTokenAsAdmin
+      revoke: revokeCustomerToken
+    verified: derived
+  - id: commerce-rest-bearer
+    surface: Adobe Commerce REST
+    endpoint: https://store.safety-kleen.com/rest/
+    type: http
+    scheme: bearer
+    header: Authorization
+    description: >-
+      Almost the whole REST surface is Bearer-gated. GET /rest/V1/store/storeViews and
+      /rest/V1/store/storeConfigs both returned HTTP 401 {"message":"Missing Bearer token."}
+      on 2026-09-05. A small directory subset is anonymous —
+      GET /rest/V1/directory/countries returned HTTP 200.
+    verified: probed
+  - id: chos-portal-login
+    surface: Clean Harbors Online Services (CHOS) customer portal
+    endpoint: https://clhsaas.cleanharbors.com/
+    type: session
+    description: >-
+      Human web login only. No token endpoint, no OIDC discovery document
+      (/.well-known/openid-configuration returned 404), and no documented programmatic access.
+    verified: probed
+discovery:
+  openid_configuration: not served on any Clean Harbors host (404 everywhere)
+  oauth_authorization_server: not served on any Clean Harbors host (404 everywhere)
+  oauth_protected_resource: not served on any Clean Harbors host (404 everywhere)
+  dynamic_client_registration: none

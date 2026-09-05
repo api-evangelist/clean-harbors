@@ -1,0 +1,130 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  Derived on 2026-09-05 from graphql/clean-harbors-store-schema.graphql and
+  llms/clean-harbors-llms.txt, and from pages fetched on cleanharbors.com. Each entry's
+  evidence names the exact artifact or URL the assertion was read from. Nothing is asserted
+  from a marketing claim alone.
+note: >-
+  Clean Harbors' sector — hazardous-waste and environmental services — has no API standards
+  regime in the Kin Score industry_regulatory map, so no conditional regulatory facet applies
+  and nothing was invented to fill the slot. The one genuine domain standard in this market
+  is the EPA's RCRA e-Manifest programme, recorded below as a participation with no contract.
+conformance:
+  - id: graphql
+    name: GraphQL specification
+    conforms: true
+    evidence: >-
+      https://store.safety-kleen.com/graphql answered a full standard introspection query
+      with HTTP 200 on 2026-09-05, returning __schema with queryType, mutationType, types,
+      directives and enumValues. The SDL printed from it is at
+      graphql/clean-harbors-store-schema.graphql.
+    detail: 65 Query fields, 168 Mutation fields, 861 named types, no subscription type.
+  - id: graphql-introspection
+    name: GraphQL introspection enabled anonymously
+    conforms: true
+    evidence: >-
+      POST https://store.safety-kleen.com/graphql with the standard IntrospectionQuery and no
+      Authorization header → HTTP 200, 2.1 MB response.
+    detail: >-
+      This is what makes the surface machine-discoverable at all. It is also a posture
+      choice most Adobe Commerce operators disable in production.
+  - id: llms-txt
+    name: llms.txt convention
+    conforms: true
+    evidence: >-
+      https://careers.cleanharbors.com/llms.txt → HTTP 200, text/plain, 2,831 bytes, saved
+      verbatim to llms/clean-harbors-llms.txt. It follows the convention's shape — H1, a
+      blockquote summary, sectioned H2s and a Links list.
+    detail: >-
+      Served on one host only. The primary domain, the Safety-Kleen domain, the CHOS portal
+      and the commerce storefront all return 404 for /llms.txt.
+  - id: cors
+    name: CORS preflight support
+    conforms: true
+    evidence: >-
+      https://careers.cleanharbors.com/api/mcp/jobs returns access-control-allow-origin: *,
+      access-control-allow-methods: GET, POST, PUT, DELETE, OPTIONS and
+      access-control-allow-headers: X-Requested-With, Content-Type, Authorization.
+  - id: schema-org
+    name: schema.org structured data (JSON-LD)
+    conforms: true
+    evidence: >-
+      https://careers.cleanharbors.com/job/679d2a69682d7689a8072f8c serves an
+      application/ld+json @graph with BreadcrumbList, WebPage, WebSite and Organization nodes.
+    detail: >-
+      Partial. No JobPosting node was found on the pages sampled, which is the schema.org type
+      a job board actually needs; the Organization node is also generically named
+      "Career Site" rather than Clean Harbors.
+  - id: rfc9457
+    name: RFC 9457 Problem Details for HTTP APIs
+    conforms: false
+    evidence: >-
+      Three distinct error envelopes were observed and none uses
+      application/problem+json — {"error": ...} from the careers API (HTTP 400),
+      {"errors":[...]} from GraphQL, {"message": ...} from Adobe Commerce REST (HTTP 401).
+      Catalogued in errors/clean-harbors-problem-types.yml.
+  - id: rfc8594
+    name: RFC 8594 Sunset header
+    conforms: false
+    evidence: >-
+      No Sunset or Deprecation header appeared on any response from either callable surface
+      on 2026-09-05.
+  - id: oauth2
+    name: OAuth 2.0
+    conforms: false
+    evidence: >-
+      /.well-known/oauth-authorization-server and /.well-known/oauth-protected-resource
+      return 404 on every Clean Harbors host (well-known/clean-harbors-well-known.yml). The
+      GraphQL contract issues an opaque customer bearer token via generateCustomerToken;
+      there is no authorization-code flow, no scopes and no dynamic client registration.
+  - id: oidc
+    name: OpenID Connect Discovery
+    conforms: false
+    evidence: /.well-known/openid-configuration returns 404 on every host probed.
+  - id: pagination
+    name: Published pagination convention
+    conforms: true
+    evidence: >-
+      Page-number pagination on both surfaces — page/pageSize on the careers API (observed
+      live, totalCount 1023) and currentPage/pageSize returning SearchResultPageInfo
+      {current_page, page_size, total_pages} in the GraphQL schema. No cursor pagination
+      exists anywhere.
+  - id: idempotency
+    name: Idempotent write protection
+    conforms: false
+    evidence: >-
+      No Idempotency-Key header and no client-token argument on any of the 168 mutations in
+      graphql/clean-harbors-store-schema.graphql, placeOrder included.
+  - id: security-txt
+    name: RFC 9116 security.txt
+    conforms: false
+    evidence: >-
+      /.well-known/security.txt returns 404 on www.cleanharbors.com, cleanharbors.com,
+      clhsaas.cleanharbors.com, www.safety-kleen.com, store.safety-kleen.com,
+      ir.cleanharbors.com and healthcare.cleanharbors.com, and returns the SPA HTML shell on
+      careers.cleanharbors.com.
+domain_standards:
+  - id: epa-e-manifest
+    name: EPA RCRA e-Manifest (Hazardous Waste Electronic Manifest Establishment Act)
+    market: hazardous waste management
+    participates: true
+    contract_signature: false
+    conforms: false
+    evidence: >-
+      https://www.cleanharbors.com/contact-us/e-manifest (HTTP 200) states that Clean Harbors
+      "is in compliance, initially using the paper manifest option" and "uploads all required
+      manifest data and manifest scans to the EPA", with fully electronic and hybrid
+      transmission to the EPA CDX system planned.
+    detail: >-
+      This is a regulatory participation stated in prose, NOT a contract signature. Clean
+      Harbors publishes no machine-readable manifest interface of its own — no schema, no
+      endpoint, no message type. The electronic surface for e-Manifest is EPA's, at
+      rcrainfo.epa.gov, and is operated by the EPA rather than by Clean Harbors. Recorded
+      here so the sector standard is visible and so a later round does not mistake the prose
+      claim for a published contract.
+    remedy: >-
+      Publishing a customer-facing manifest API — or even an OpenAPI for the manifest and
+      shipment views already inside the CHOS portal — would be the single highest-value
+      contract Clean Harbors could ship, because the data model is already federally
+      standardised.

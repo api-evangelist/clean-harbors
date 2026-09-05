@@ -1,0 +1,155 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Direct HTTPS probes on 2026-09-05 of every host this record knows — the registrable domain
+  and www, the Safety-Kleen subsidiary domain, the CLH SaaS customer portal, the investor
+  relations host, the healthcare micro-site, the Adobe Commerce storefront that serves the
+  GraphQL contract, and the careers host that serves the llms.txt and the Job Query API.
+note: >-
+  NOTHING WAS FOUND. Every /.well-known/ path 404s on every Clean Harbors host. Two hosts
+  answer 200 for paths they do not serve and must not be read as hits:
+  careers.cleanharbors.com is a Next.js SPA whose catch-all route returns the site shell
+  (text/html, ~50KB) for every /.well-known/* path, and ir.cleanharbors.com sits behind a
+  WAF that answers 403 "Access Denied" to a plain crawler and 404 HTML to a browser
+  User-Agent. Neither is a served document. No WellKnown or SecurityTxt pointer is wired
+  from apis.yml, because a probe recording an absence must not be scored as a presence.
+hosts:
+  - host: www.cleanharbors.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: cleanharbors.com
+    note: 301 redirects to www.cleanharbors.com; probed paths resolve there.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: clhsaas.cleanharbors.com
+    note: Clean Harbors Online Services (CHOS) authenticated customer portal.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: www.safety-kleen.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: store.safety-kleen.com
+    note: >-
+      Adobe Commerce storefront; serves the live GraphQL contract at /graphql but publishes
+      no discovery documents.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: careers.cleanharbors.com
+    note: >-
+      SOFT 200 — SPA catch-all. Every path below returned HTTP 200 with text/html of ~50KB
+      (the site shell), not a document. Treated as a miss on all eight paths.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        result: html-shell
+      - path: /.well-known/openid-configuration
+        status: 200
+        result: html-shell
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        result: html-shell
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        result: html-shell
+      - path: /.well-known/api-catalog
+        status: 200
+        result: html-shell
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        result: html-shell
+      - path: /.well-known/agent-card.json
+        status: 200
+        result: html-shell
+      - path: /.well-known/agent.json
+        status: 200
+        result: html-shell
+  - host: ir.cleanharbors.com
+    note: >-
+      WAF-fronted Drupal 10. Answers 403 "Access Denied" to a plain crawler; with a browser
+      User-Agent the same paths return 404 HTML. No document is served either way.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 403
+      - path: /.well-known/agent.json
+        status: 403
+  - host: healthcare.cleanharbors.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404

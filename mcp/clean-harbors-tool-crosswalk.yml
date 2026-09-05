@@ -1,0 +1,101 @@
+generated: '2026-09-05'
+method: derived
+source: 'Derived on 2026-09-05 from two contracts already in this repo: the self-describing tool manifest
+  at mcp/clean-harbors-careers-jobs-manifest.json (fetched from https://careers.cleanharbors.com/api/mcp/jobs)
+  and the introspected GraphQL SDL at graphql/clean-harbors-store-schema.graphql.'
+note: Clean Harbors publishes no OpenAPI, so there are no operationIds to bind to. This crosswalk therefore
+  binds each advertised tool to the HTTP call that actually serves it — the request shape observed live
+  — and records the GraphQL root fields as the separate, unbridged surface they are. Confidence is high
+  only where the call was executed and a 200 returned.
+surfaces:
+- name: Careers Job Query API
+  kind: http-json
+  endpoint: https://careers.cleanharbors.com/api/mcp/jobs
+  transport: HTTP GET with a `tool` query parameter
+  auth: none
+  gated: false
+  documented_at: https://careers.cleanharbors.com/llms.txt
+- name: Clean Harbors / Safety-Kleen commerce GraphQL
+  kind: graphql
+  endpoint: https://store.safety-kleen.com/graphql
+  auth: Anonymous for catalog, CMS and store-config reads; a customer Bearer token from the generateCustomerToken
+    mutation is required for cart, order, company and quote fields.
+  gated: false
+  introspection: enabled
+- name: Adobe Commerce REST
+  kind: rest
+  endpoint: https://store.safety-kleen.com/rest/
+  auth: Bearer token
+  gated: true
+  note: A handful of directory endpoints answer anonymously (/rest/V1/directory/countries → 200); everything
+    else returns {"message":"Missing Bearer token."} with HTTP 401. The Magento Swagger generator at /rest/all/schema?services=all
+    times out at the edge with HTTP 503, so no REST contract could be captured.
+- name: Adobe Commerce SOAP
+  kind: soap
+  endpoint: https://store.safety-kleen.com/soap
+  auth: Bearer token
+  gated: true
+  note: A SOAP endpoint is live but no WSDL could be retrieved on 2026-09-05. GET /soap?wsdl_list=1 returns
+    HTTP 200 application/soap+xml containing an env:Fault ("Internal Error. Details are available in Magento
+    log file."), and GET /soap?wsdl=1&services=... returns HTTP 503 at the edge. /api/v2_soap?wsdl=1 and
+    /api/soap?wsdl both 404. No WSDL was saved, because none was served — an unretrievable contract is
+    recorded as absent rather than authored.
+crosswalk:
+- tool: search_jobs
+  category: jobs
+  rest: []
+  binding: GET /api/mcp/jobs?tool=search_jobs
+  parameters:
+  - search
+  - department
+  - employmentType
+  - location
+  - page
+  - pageSize
+  confidence: high
+  note: Executed 2026-09-05 with pageSize=2 → HTTP 200, totalCount 1023. Response envelope is {tool, results[],
+    totalCount, page, pageSize, summary}.
+- tool: get_job
+  category: jobs
+  rest: []
+  binding: GET /api/mcp/jobs?tool=get_job&jobId={requisitionId}
+  parameters:
+  - jobId
+  confidence: high
+  note: Executed 2026-09-05 with jobId=165235 → HTTP 200. Response envelope is {tool, result}. The record
+    carries client "Clean Harbors Corporate - USA" and an applyUrl into Oracle Fusion HCM (site CLH-us).
+- tool: list_departments
+  category: jobs
+  rest: []
+  binding: GET /api/mcp/jobs?tool=list_departments
+  parameters: []
+  confidence: high
+  note: 'Executed 2026-09-05 → HTTP 200. Defect worth reporting to the provider: every returned department
+    has `name` set equal to its opaque `id` (e.g. name "687e8e451c9a05008f6ad30f"), so the discovery call
+    the llms.txt tells an agent to make in order to learn department IDs returns no human- or agent-readable
+    label. search_jobs results do carry real department names ("Driver – Bulk", "Driver-National").'
+- tool: list_locations
+  category: jobs
+  rest: []
+  binding: GET /api/mcp/jobs?tool=list_locations
+  parameters: []
+  confidence: high
+mcp_only: []
+graphql_only:
+- surface: store.safety-kleen.com/graphql
+  reason: No tool and no REST operation fronts the commerce schema. Its 65 Query and 168 Mutation root
+    fields are reachable only by speaking GraphQL directly.
+  query_fields: 65
+  mutation_fields: 168
+  named_types: 861
+rest_only:
+- surface: store.safety-kleen.com/rest/
+  reason: Bearer-gated; no published contract and no tool binding.
+coverage:
+  tools_total: 4
+  tools_bound: 4
+  tools_unbound: 0
+  rest_operations_total: 0
+  rest_operations_bound: 0
+  note: rest_operations_total is 0 because no OpenAPI exists for this provider, not because the REST surface
+    is empty.

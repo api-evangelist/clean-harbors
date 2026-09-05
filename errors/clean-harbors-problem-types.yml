@@ -1,0 +1,112 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  Derived on 2026-09-05 from the error types declared in
+  graphql/clean-harbors-store-schema.graphql, plus error responses observed live from
+  https://careers.cleanharbors.com/api/mcp/jobs and https://store.safety-kleen.com/rest/.
+format: none
+rfc9457: false
+note: >-
+  No surface in the Clean Harbors estate returns application/problem+json, and no error
+  reference page is published. There is no OpenAPI, so no 4xx/5xx response catalogue could be
+  derived; what follows is the error vocabulary the GraphQL contract itself declares and the
+  envelopes we observed. Codes below are GraphQL enum members, not HTTP statuses.
+envelopes:
+  - surface: careers-jobs
+    shape: '{"error": "<message>"}'
+    http_status: 400
+    observed: true
+  - surface: commerce-graphql
+    shape: '{"errors":[{"message","locations","path","extensions"}]}'
+    http_status: 200 for field errors, 400 for a syntax error
+    observed: true
+  - surface: commerce-rest
+    shape: '{"message": "<message>"}'
+    http_status: 401
+    observed: true
+error_interface:
+  name: ErrorInterface
+  implementations: [NoSuchEntityUidError, InternalError, NegotiableQuoteInvalidStateError]
+problem_types:
+  - id: careers.unknown-tool
+    surface: careers-jobs
+    http_status: 400
+    title: Unknown tool
+    detail: >-
+      The `tool` query parameter named an operation the endpoint does not implement. The
+      response body lists the four valid tool names.
+    observed_example: >-
+      {"error":"Unknown tool \"bogus_tool\". Available: search_jobs, get_job,
+      list_departments, list_locations"}
+    remediation: Call the endpoint with no parameters to retrieve the manifest of valid tools.
+  - id: commerce-rest.missing-bearer-token
+    surface: commerce-rest
+    http_status: 401
+    title: Missing Bearer token
+    detail: The Adobe Commerce REST surface requires an Authorization Bearer token.
+    observed_example: '{"message":"Missing Bearer token."}'
+    remediation: >-
+      Obtain a token. Note that Clean Harbors documents no way for a third party to get one.
+  - id: commerce-rest.request-cannot-be-processed
+    surface: commerce-rest
+    http_status: 400
+    title: Specified request cannot be processed
+    observed_example: '{"message":"Specified request cannot be processed."}'
+  - id: commerce-graphql.cart-user-input
+    surface: commerce-graphql
+    enum: CartUserInputErrorType
+    codes: [PRODUCT_NOT_FOUND, NOT_SALABLE, INSUFFICIENT_STOCK, COULD_NOT_FIND_CART_ITEM, REQUIRED_PARAMETER_MISSING, INVALID_PARAMETER_VALUE, PERMISSION_DENIED, UNDEFINED]
+    title: Cart user input error
+  - id: commerce-graphql.cart-item
+    surface: commerce-graphql
+    enum: CartItemErrorType
+    codes: [ITEM_QTY, ITEM_INCREMENTS, UNDEFINED]
+    title: Cart item error
+  - id: commerce-graphql.clear-cart
+    surface: commerce-graphql
+    enum: ClearCartErrorType
+    codes: [NOT_FOUND, UNAUTHORISED, INACTIVE, UNDEFINED]
+    title: Clear cart error
+  - id: commerce-graphql.purchase-order
+    surface: commerce-graphql
+    enum: PurchaseOrderErrorType
+    codes: [NOT_FOUND, OPERATION_NOT_APPLICABLE, COULD_NOT_SAVE, NOT_VALID_DATA, UNDEFINED]
+    title: Purchase order error
+  - id: commerce-graphql.validate-purchase-order
+    surface: commerce-graphql
+    enum: ValidatePurchaseOrderErrorType
+    codes: [NOT_FOUND, OPERATION_NOT_APPLICABLE, COULD_NOT_SAVE, NOT_VALID_DATA, UNDEFINED]
+    title: Purchase order validation error
+  - id: commerce-graphql.requisition-list-add-to-cart
+    surface: commerce-graphql
+    enum: AddRequisitionListItemToCartUserErrorType
+    codes: [OUT_OF_STOCK, UNAVAILABLE_SKU, OPTIONS_UPDATED, LOW_QUANTITY]
+    title: Requisition-list add-to-cart error
+  - id: commerce-graphql.wishlist-cart
+    surface: commerce-graphql
+    enum: WishlistCartUserInputErrorType
+    codes: [PRODUCT_NOT_FOUND, NOT_SALABLE, INSUFFICIENT_STOCK, UNDEFINED]
+    title: Wishlist-to-cart error
+  - id: commerce-graphql.wishlist
+    surface: commerce-graphql
+    enum: WishListUserInputErrorType
+    codes: [PRODUCT_NOT_FOUND, UNDEFINED]
+    title: Wishlist error
+  - id: commerce-graphql.gift-registry-items
+    surface: commerce-graphql
+    enum: GiftRegistryItemsUserErrorType
+    codes: [OUT_OF_STOCK, NOT_FOUND, UNDEFINED]
+    title: Gift registry items error
+  - id: commerce-graphql.attribute-metadata
+    surface: commerce-graphql
+    enum: AttributeMetadataErrorType
+    codes: [ENTITY_NOT_FOUND, ATTRIBUTE_NOT_FOUND, FILTER_NOT_FOUND, UNDEFINED]
+    title: Attribute metadata error
+  - id: commerce-graphql.delete-purchase-order-approval-rule
+    surface: commerce-graphql
+    enum: DeletePurchaseOrderApprovalRuleErrorType
+    codes: [NOT_FOUND, UNDEFINED]
+    title: Delete purchase-order approval rule error
+counts:
+  enums_cataloged: 11
+  observed_http_errors: 3

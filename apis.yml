@@ -24,89 +24,229 @@ accessModel:
   generated: '2026-07-22'
   method: derived
 created: '2026-03-23'
-modified: '2026-04-23'
+modified: '2026-09-05'
 type: Index
 access: 3rd-Party
-position: Consuming
+position: Producing
 specificationVersion: '0.23'
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/clean-harbors.png
 tags:
-  - Emergency Response
-  - Environmental Services
+- Adobe Commerce
+- Emergency Response
+- Environmental Services
+- Fortune 1000
+- GraphQL
+- Hazardous Waste
+- Industrial Services
+- Job Postings
+- Manifest Tracking
+- Recycling
+- Remediation
+description: 'Clean Harbors is the largest provider of environmental and industrial services in North
+  America — hazardous and non-hazardous waste management, emergency response, industrial cleaning, remediation,
+  and used-oil and solvent recycling through its Safety-Kleen subsidiary. It runs no developer programme:
+  no developer portal, no API documentation, no SDK in any registry, no GitHub organisation, and no /.well-known/
+  document on any host. Customers use the authenticated Clean Harbors Online Services portal at clhsaas.cleanharbors.com
+  and the EPA''s RCRA e-Manifest programme, whose machine-readable surface belongs to the EPA. Two callable
+  contracts nonetheless run on Clean Harbors hosts, both found by direct probing: an anonymous, fully
+  introspectable GraphQL endpoint at store.safety-kleen.com fronting six brand storefronts on one Adobe
+  Commerce instance, and an unauthenticated Job Query API at careers.cleanharbors.com that the company
+  documents in a published llms.txt.'
+apis:
+- aid: clean-harbors:careers-jobs
+  name: Clean Harbors Careers Job Query API
+  description: 'Unauthenticated JSON API over Clean Harbors'' open positions, served from the company''s
+    own careers host and documented by the company in its published llms.txt. One HTTP GET endpoint selects
+    among four operations with a `tool` query parameter — search_jobs, get_job, list_departments and list_locations
+    — and returns paged JSON. A bare GET returns a self-describing tool manifest. All four operations
+    were called anonymously on 2026-09-05 and returned HTTP 200; search_jobs reported 1,023 open requisitions.
+    Despite the /api/mcp/ path this is not an MCP server: a JSON-RPC tools/list POST returns 405. The
+    careers platform is AppVault; the host, the data and the postings are Clean Harbors''.'
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://careers.cleanharbors.com/
+  baseURL: https://careers.cleanharbors.com/api/mcp/jobs
+  tags:
+  - Careers
+  - Job Postings
+  - Recruiting
+  - Agent Readable
+  - Public API
+  properties:
+  - url: llms/clean-harbors-llms.txt
+    type: LLMsTxt
+  - url: https://careers.cleanharbors.com/llms.txt
+    type: Documentation
+  - url: mcp/clean-harbors-careers-jobs-manifest.json
+    type: X-ToolManifest
+  - url: mcp/clean-harbors-tool-crosswalk.yml
+    type: ToolCrosswalk
+  - url: authentication/clean-harbors-authentication.yml
+    type: Authentication
+  - url: conventions/clean-harbors-conventions.yml
+    type: Conventions
+  - url: errors/clean-harbors-problem-types.yml
+    type: ErrorCatalog
+  - url: rate-limits/clean-harbors-rate-limits.yml
+    type: RateLimits
+  - url: data-model/clean-harbors-data-model.yml
+    type: DataModel
+  - url: skills/clean-harbors-search-jobs.md
+    type: AgentSkill
+- aid: clean-harbors:store-graphql
+  name: Clean Harbors / Safety-Kleen Commerce GraphQL API
+  description: Live GraphQL endpoint behind the Safety-Kleen online store and five sibling Clean Harbors
+    brand storefronts (Thermo Fluids, Noble Oil, Emerald Renewable Energy, Murphy's Waste Oil and Synergy
+    Recycling), all on one Adobe Commerce instance whose storeConfig reports website_name "Clean Harbors
+    USA Website". Anonymous introspection is enabled and returned the complete contract on 2026-09-05
+    — 65 Query fields, 168 Mutation fields and 861 named types, including the Adobe Commerce B2B surface
+    (companies, negotiable quotes, requisition lists and purchase-order approval flows). Catalog, category,
+    CMS and store-configuration reads answer with no credential; customer-scoped fields require a bearer
+    token issued by the generateCustomerToken mutation. The parallel REST surface is bearer-gated and
+    its Swagger generator times out, so GraphQL is the only readable contract.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://store.safety-kleen.com/
+  baseURL: https://store.safety-kleen.com/graphql
+  tags:
+  - GraphQL
+  - Ecommerce
+  - B2B Commerce
+  - Adobe Commerce
+  - Safety-Kleen
+  - Catalog
+  properties:
+  - url: graphql/clean-harbors-store-schema.graphql
+    type: GraphQLSchema
+  - url: graphql/clean-harbors-store-introspection.json
+    type: X-GraphQLIntrospection
+  - url: authentication/clean-harbors-authentication.yml
+    type: Authentication
+  - url: conventions/clean-harbors-conventions.yml
+    type: Conventions
+  - url: errors/clean-harbors-problem-types.yml
+    type: ErrorCatalog
+  - url: lifecycle/clean-harbors-lifecycle.yml
+    type: Lifecycle
+  - url: data-model/clean-harbors-data-model.yml
+    type: DataModel
+  - url: conformance/clean-harbors-conformance.yml
+    type: Conformance
+  - url: skills/clean-harbors-browse-store-catalog.md
+    type: AgentSkill
+- aid: clean-harbors:customer-portal
+  name: Clean Harbors Customer Portal (CLH SaaS)
+  tags:
+  - Customer Portal
+  - Manifests
+  - Service Requests
+  - Waste Profiles
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://clhsaas.cleanharbors.com/
+  properties:
+  - url: https://clhsaas.cleanharbors.com/
+    type: Portal
+  - url: https://www.cleanharbors.com/chos-reference-guides
+    type: Documentation
+  description: 'Clean Harbors Online Services (CHOS) — the authenticated web portal where customers create
+    waste profiles, raise drum and bulk service requests, manage on-site waste inventory, and retrieve
+    manifests, shipping documents, reports and invoices. Human login only: there is no token endpoint,
+    no OpenID Connect discovery document (/.well-known/openid-configuration returns 404) and no documented
+    programmatic access. The company publishes quick-reference guides for it but no API.'
+  baseURL: https://clhsaas.cleanharbors.com/
+- aid: clean-harbors:e-manifest
+  name: EPA e-Manifest Integration
+  tags:
+  - EPA
+  - e-Manifest
+  - RCRA
   - Hazardous Waste
-  - Industrial Services
-  - Manifest Tracking
-  - Recycling
-  - Remediation
-  - Fortune 1000
-description: >-
-  Clean Harbors is the largest provider of environmental and industrial
-  services in North America, delivering hazardous and non-hazardous
-  waste management, emergency response, industrial cleaning,
-  environmental remediation, and used-oil and solvent recycling through
-  its Safety-Kleen subsidiary. Clean Harbors does not publish a public
-  developer portal or general-purpose REST API surface; programmatic
-  interfaces are limited to the authenticated customer portal at
-  clhsaas.cleanharbors.com (CLH SaaS) for service requests, manifests,
-  and reporting, and partner-mediated EDI feeds. Customers also use the
-  EPA e-Manifest system for federally regulated hazardous-waste
-  manifest tracking.
-apis: []
-artifacts:
-  - aid: clean-harbors:customer-portal
-    name: Clean Harbors Customer Portal (CLH SaaS)
-    tags:
-      - Customer Portal
-      - Manifests
-      - Service Requests
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://clhsaas.cleanharbors.com/
-    properties:
-      - url: https://clhsaas.cleanharbors.com/
-        type: Portal
-    description: >-
-      Authenticated web portal for Clean Harbors customers to submit
-      service requests, view manifests and shipments, retrieve invoices
-      and reports, and manage account profile information.
-  - aid: clean-harbors:e-manifest
-    name: EPA e-Manifest Integration
-    tags:
-      - EPA
-      - e-Manifest
-      - RCRA
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://www.epa.gov/e-manifest
-    properties:
-      - url: https://www.epa.gov/e-manifest
-        type: Documentation
-    description: >-
-      Clean Harbors interoperates with the federal EPA e-Manifest system
-      for electronic creation, signing, and tracking of hazardous-waste
-      manifests under RCRA, which exposes its own public APIs at
-      manifest.epa.gov.
+  - Regulatory
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.epa.gov/e-manifest
+  properties:
+  - url: https://www.epa.gov/e-manifest
+    type: Documentation
+  - url: https://www.cleanharbors.com/contact-us/e-manifest
+    type: X-ProviderStatement
+  - url: conformance/clean-harbors-conformance.yml
+    type: Conformance
+  description: 'Clean Harbors participates in the EPA''s RCRA e-Manifest programme for hazardous-waste
+    manifest tracking. Its own e-Manifest page states the company "is in compliance, initially using the
+    paper manifest option" and uploads all required manifest data and scans to the EPA, with fully electronic
+    and hybrid transmission to the EPA CDX system planned. This is a regulatory participation, not a Clean
+    Harbors contract: the machine-readable surface is the EPA''s at rcrainfo.epa.gov and is operated by
+    the EPA. Clean Harbors publishes no manifest API of its own — which, given that the data model is
+    already federally standardised, is the single largest gap in its public API surface.'
+  baseURL: https://rcrainfo.epa.gov/
 common:
-  - type: DomainSecurity
-    url: security/clean-harbors-domain-security.yml
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/clean-harbors
-  - type: Website
-    url: https://www.cleanharbors.com/
-  - type: Customer Portal
-    url: https://clhsaas.cleanharbors.com/
-  - type: Safety-Kleen
-    url: https://www.safety-kleen.com/
-  - type: Investor Relations
-    url: https://investors.cleanharbors.com/
-  - type: PrivacyPolicy
-    url: https://www.cleanharbors.com/privacy-policy
-  - type: TermsOfService
-    url: https://www.cleanharbors.com/terms-of-use
-  - type: Support
-    url: https://www.cleanharbors.com/contact-us
-  - type: StatusPage
-    url: https://www.cleanharbors.com/contact-us
-  - type: JSONLD
-    url: json-ld/clean-harbors-context.jsonld
+- type: DomainSecurity
+  url: security/clean-harbors-domain-security.yml
+- type: LinkedIn
+  url: https://www.linkedin.com/company/clean-harbors
+- type: Website
+  url: https://www.cleanharbors.com/
+- type: PrivacyPolicy
+  url: https://www.cleanharbors.com/privacy-policy
+- type: Support
+  url: https://www.cleanharbors.com/contact-us
+- type: JSONLD
+  url: json-ld/clean-harbors-context.jsonld
+- type: Portal
+  url: https://clhsaas.cleanharbors.com/
+- type: X-SubsidiaryWebsite
+  url: https://www.safety-kleen.com/
+- type: InvestorRelations
+  url: https://ir.cleanharbors.com/
+- type: TermsOfService
+  url: https://www.cleanharbors.com/terms-of-service
+- type: GraphQLSchema
+  url: graphql/clean-harbors-store-schema.graphql
+- type: LLMsTxt
+  url: llms/clean-harbors-llms.txt
+- type: Packages
+  url: packages/clean-harbors-packages.yml
+- type: Authentication
+  url: authentication/clean-harbors-authentication.yml
+- type: Conventions
+  url: conventions/clean-harbors-conventions.yml
+- type: ErrorCatalog
+  url: errors/clean-harbors-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/clean-harbors-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/clean-harbors-lifecycle.yml
+- type: DataModel
+  url: data-model/clean-harbors-data-model.yml
+- type: Conformance
+  url: conformance/clean-harbors-conformance.yml
+- type: ToolCrosswalk
+  url: mcp/clean-harbors-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Plans
+  url: plans/clean-harbors-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/clean-harbors-rate-limits.yml
+- type: Documentation
+  url: https://www.cleanharbors.com/chos-reference-guides
+- type: Careers
+  url: https://careers.cleanharbors.com/
+- type: Blog
+  url: https://www.cleanharbors.com/about-us/blog
+- type: Newsroom
+  url: https://www.cleanharbors.com/about-us/news
+- type: Sustainability
+  url: https://www.cleanharbors.com/sustainability
+- type: ContactUs
+  url: https://www.cleanharbors.com/contact-us
+- type: Wikipedia
+  url: https://en.wikipedia.org/wiki/Clean_Harbors
+- type: X
+  url: https://twitter.com/cleanharbors
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-09-05'
+  status: enriched
+  artifacts_added: 19
+  pass: local-v3

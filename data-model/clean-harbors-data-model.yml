@@ -1,0 +1,167 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  Derived on 2026-09-05 from graphql/clean-harbors-store-schema.graphql (861 named types,
+  introspected live from https://store.safety-kleen.com/graphql) and from real response
+  bodies returned by https://careers.cleanharbors.com/api/mcp/jobs. Every entity and every
+  relationship below is a field that exists in the contract or in an observed payload; none
+  was inferred from documentation prose.
+domains:
+  - id: careers
+    name: Careers / job postings
+    surface: https://careers.cleanharbors.com/api/mcp/jobs
+    entity_count: 3
+  - id: commerce
+    name: Clean Harbors / Safety-Kleen commerce (Adobe Commerce B2B)
+    surface: https://store.safety-kleen.com/graphql
+    entity_count: 9
+entities:
+  - id: Job
+    domain: careers
+    identifier: requisitionId
+    id_shape: numeric string (observed 165235, 164942, 159913)
+    fields: [requisitionId, client, title, description, department, location, employmentType, datePosted, applyUrl]
+    note: >-
+      `client` carries the operating entity — "Clean Harbors Corporate - USA" on every record
+      observed. `applyUrl` leaves the API entirely and lands in Oracle Fusion HCM
+      (epyc.fa.us2.oraclecloud.com, candidate site CLH-us), which is where the application
+      itself is filed.
+    relationships:
+      - type: belongs_to
+        target: Department
+        via: department
+      - type: belongs_to
+        target: Location
+        via: location
+  - id: Department
+    domain: careers
+    identifier: id
+    id_shape: 24-character hex object id (observed 687e8e451c9a05008f6ad30f)
+    fields: [id, name, jobCount]
+    defect: >-
+      Every record returned by list_departments sets `name` equal to `id`, so the discovery
+      call the provider's own llms.txt prescribes cannot actually name a department. Real
+      names ("Driver – Bulk", "Driver-National") appear only on Job records from search_jobs.
+    relationships:
+      - type: has_many
+        target: Job
+        via: jobCount
+  - id: Location
+    domain: careers
+    identifier: composite (city, state, country)
+    fields: [state, country, counts]
+    relationships:
+      - type: has_many
+        target: Job
+  - id: Customer
+    domain: commerce
+    type: Customer
+    field_count: 47
+    relationships:
+      - {type: has_many, target: CustomerAddress, via: addresses}
+      - {type: has_many, target: CustomerOrders, via: orders}
+      - {type: has_many, target: PurchaseOrder, via: purchase_orders}
+      - {type: has_many, target: RequisitionList, via: requisition_lists}
+      - {type: has_many, target: Return, via: returns}
+      - {type: has_many, target: GiftRegistry, via: gift_registries}
+      - {type: has_many, target: Wishlist, via: wishlists}
+      - {type: has_one, target: CompareList, via: compare_list}
+      - {type: has_one, target: RewardPoints, via: reward_points}
+      - {type: has_many, target: UserCompaniesOutput, via: companies}
+  - id: Company
+    domain: commerce
+    type: Company
+    field_count: 19
+    note: >-
+      The B2B module is enabled. This is the entity that makes the storefront a business
+      account system rather than a consumer shop.
+    relationships:
+      - {type: has_one, target: Customer, via: company_admin}
+      - {type: has_many, target: CompanyUsers, via: users}
+      - {type: has_many, target: CompanyRole, via: roles}
+      - {type: has_one, target: CompanyTeam, via: team}
+      - {type: has_one, target: CompanyStructure, via: structure}
+      - {type: has_one, target: CompanyCredit, via: credit}
+      - {type: has_one, target: CompanyCreditHistory, via: credit_history}
+      - {type: has_one, target: CompanyLegalAddress, via: legal_address}
+      - {type: has_one, target: CompanySalesRepresentative, via: sales_representative}
+      - {type: has_many, target: CompanyAclResource, via: acl_resources}
+  - id: Cart
+    domain: commerce
+    type: Cart
+    field_count: 21
+    relationships:
+      - {type: has_many, target: CartItemInterface, via: items}
+      - {type: has_one, target: BillingCartAddress, via: billing_address}
+      - {type: has_many, target: ShippingCartAddress, via: shipping_addresses}
+      - {type: has_one, target: CartPrices, via: prices}
+      - {type: has_one, target: SelectedPaymentMethod, via: selected_payment_method}
+      - {type: has_many, target: AppliedCoupon, via: applied_coupons}
+      - {type: has_many, target: AppliedGiftCard, via: applied_gift_cards}
+  - id: CustomerOrder
+    domain: commerce
+    type: CustomerOrder
+    field_count: 33
+    relationships:
+      - {type: has_many, target: OrderItemInterface, via: items}
+      - {type: has_many, target: Invoice, via: invoices}
+      - {type: has_many, target: OrderShipment, via: shipments}
+      - {type: has_many, target: CreditMemo, via: credit_memos}
+      - {type: has_many, target: Returns, via: returns}
+      - {type: has_one, target: OrderAddress, via: billing_address}
+      - {type: has_one, target: OrderAddress, via: shipping_address}
+      - {type: has_one, target: OrderTotal, via: total}
+      - {type: has_many, target: OrderItemInterface, via: items_eligible_for_return}
+  - id: PurchaseOrder
+    domain: commerce
+    type: PurchaseOrder
+    field_count: 12
+    relationships:
+      - {type: belongs_to, target: Customer, via: created_by}
+      - {type: has_one, target: CustomerOrder, via: order}
+      - {type: has_one, target: Cart, via: quote}
+      - {type: has_one, target: PurchaseOrderRuleApprovalFlow, via: approval_flow}
+      - {type: has_many, target: PurchaseOrderComment, via: comments}
+      - {type: has_many, target: PurchaseOrderHistoryItem, via: history_log}
+  - id: NegotiableQuote
+    domain: commerce
+    type: NegotiableQuote
+    field_count: 17
+    relationships:
+      - {type: belongs_to, target: NegotiableQuoteUser, via: buyer}
+      - {type: has_many, target: CartItemInterface, via: items}
+      - {type: has_one, target: CartPrices, via: prices}
+      - {type: has_many, target: NegotiableQuoteComment, via: comments}
+      - {type: has_many, target: NegotiableQuoteHistoryEntry, via: history}
+  - id: RequisitionList
+    domain: commerce
+    type: RequisitionList
+    field_count: 7
+    relationships:
+      - {type: has_many, target: RequisitionListItems, via: requisition_list_items}
+  - id: ProductInterface
+    domain: commerce
+    type: ProductInterface
+    field_count: 87
+    relationships:
+      - {type: has_many, target: CategoryInterface, via: categories}
+      - {type: has_one, target: PriceRange, via: price_range}
+      - {type: has_many, target: TierPrice, via: price_tiers}
+      - {type: has_many, target: MediaGalleryInterface, via: media_gallery}
+      - {type: has_many, target: ProductInterface, via: related_products}
+      - {type: has_many, target: ProductInterface, via: crosssell_products}
+      - {type: has_one, target: ProductReviews, via: reviews}
+  - id: Wishlist
+    domain: commerce
+    type: Wishlist
+    field_count: 8
+    relationships:
+      - {type: has_many, target: WishlistItem, via: items}
+id_conventions:
+  commerce: >-
+    The schema mixes integer `id` fields with opaque base64 `uid` fields (the ID scalar) on
+    the newer types. There is no prefixed-id scheme (no `cus_`/`ord_` style prefixes), so an
+    identifier alone does not tell an agent what it identifies.
+  careers: >-
+    Two unrelated identifier shapes coexist — numeric requisition ids on Job records and
+    24-character hex object ids on Department records and on /job/ URLs.

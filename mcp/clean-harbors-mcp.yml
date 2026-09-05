@@ -1,0 +1,51 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Probed https://careers.cleanharbors.com/api/mcp/jobs on 2026-09-05 with both a JSON-RPC
+  POST and a plain GET, and swept every other Clean Harbors / Safety-Kleen host for an MCP
+  endpoint. Also searched npm, PyPI and the docs for a first-party MCP package.
+status: none
+finding: >-
+  Clean Harbors ships NO Model Context Protocol server. The one path in the estate whose URL
+  contains "mcp" — https://careers.cleanharbors.com/api/mcp/jobs, advertised in the careers
+  site's own llms.txt as the "Job Query API" — is NOT an MCP server. A JSON-RPC POST of
+  {"jsonrpc":"2.0","id":1,"method":"tools/list"} returns HTTP 405 Method Not Allowed. The
+  endpoint is an unauthenticated HTTP GET JSON API with a `tool=` query parameter, and a
+  bare GET returns a self-describing manifest naming four tools. It is an agent-oriented
+  surface and a real one, but calling it MCP would be wrong, and it is registered in apis.yml
+  as an HTTP API rather than as an MCP server for exactly that reason.
+deployment:
+  mode: none
+  endpoint:
+  install:
+  package:
+  auth: none
+  verified: probed
+probes:
+  - url: https://careers.cleanharbors.com/api/mcp/jobs
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+    accept: application/json, text/event-stream
+    status: 405
+    result: not-an-mcp-server
+  - url: https://careers.cleanharbors.com/api/mcp/jobs
+    method: GET
+    status: 200
+    content_type: application/json
+    result: >-
+      Self-describing manifest — name "AppVault Career Site MCP Jobs API", four tools
+      (search_jobs, get_job, list_departments, list_locations). Saved verbatim to
+      mcp/clean-harbors-careers-jobs-manifest.json.
+  - url: https://store.safety-kleen.com/graphql
+    method: POST
+    status: 200
+    result: >-
+      GraphQL, not MCP. Full anonymous introspection succeeded; the SDL is saved to
+      graphql/clean-harbors-store-schema.graphql.
+package_search:
+  - registry: npm
+    queries: [clean-harbors, cleanharbors, safety-kleen, safetykleen]
+    result: no first-party package
+  - registry: pypi
+    queries: [clean-harbors, cleanharbors, safety-kleen, safetykleen]
+    result: 404 on every name

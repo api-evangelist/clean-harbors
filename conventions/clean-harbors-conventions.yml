@@ -1,0 +1,173 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  Derived on 2026-09-05 from graphql/clean-harbors-store-schema.graphql, from the response
+  envelopes and headers observed on live calls to https://store.safety-kleen.com/graphql,
+  https://store.safety-kleen.com/rest/ and https://careers.cleanharbors.com/api/mcp/jobs, and
+  from the provider-published llms/clean-harbors-llms.txt.
+note: >-
+  Clean Harbors publishes no developer conventions document. Everything below was read off
+  the contract or off a response we received. The two callable surfaces do not share
+  conventions — they are different products on different platforms — so each is described
+  separately rather than averaged into one house style.
+surfaces:
+  - id: careers-jobs
+    name: Careers Job Query API
+    base: https://careers.cleanharbors.com/api/mcp/jobs
+    style: HTTP GET, JSON, single endpoint with a `tool` selector query parameter
+  - id: commerce-graphql
+    name: Clean Harbors / Safety-Kleen commerce GraphQL
+    base: https://store.safety-kleen.com/graphql
+    style: GraphQL over HTTP POST
+auth_style:
+  careers-jobs: none
+  commerce-graphql: >-
+    Anonymous for catalog reads; Authorization Bearer customer token for customer-scoped
+    fields. See authentication/clean-harbors-authentication.yml.
+pagination:
+  careers-jobs:
+    style: page-number
+    params: [page, pageSize]
+    defaults: {page: 1, pageSize: 10}
+    response_fields: [totalCount, page, pageSize, summary]
+    verified: probed
+  commerce-graphql:
+    style: page-number
+    params: [currentPage, pageSize]
+    response_type: SearchResultPageInfo
+    response_fields: [current_page, page_size, total_pages]
+    also: total_count on the enclosing result type
+    note: >-
+      No cursor pagination exists anywhere in the schema — an agent walking a large result
+      set must page by number and cannot resume from an opaque cursor.
+    verified: derived
+field_selection:
+  careers-jobs:
+    supported: false
+    note: The response shape is fixed; there is no sparse-fieldset or expansion parameter.
+  commerce-graphql:
+    supported: true
+    note: GraphQL selection sets are the field-selection mechanism.
+metadata:
+  commerce-graphql:
+    mechanism: custom attributes
+    fields: [customAttributeMetadataV2, attributesList, attributesForm]
+    note: customAttributeMetadata is deprecated in favour of customAttributeMetadataV2.
+request_id_tracing:
+  careers-jobs:
+    supported: false
+    note: No request-id or correlation header is returned.
+  commerce-graphql:
+    supported: partial
+    note: >-
+      Responses carry x-magento-cache-id and an x-debug-info header, plus Fastly x-served-by
+      and x-cache. These are platform cache diagnostics, not a documented correlation id an
+      agent can quote in a support request.
+versioning:
+  scheme: none-published
+  note: >-
+    Neither surface carries a version in its path, its media type or a header. The GraphQL
+    schema versions individual fields instead, by deprecating a field and shipping a `V2`
+    sibling (createCustomerV2, updateCustomerV2, deleteCompanyUserV2,
+    customAttributeMetadataV2). Clean Harbors publishes no versioning policy of its own.
+error_envelope:
+  careers-jobs:
+    shape: '{"error": "<message>"}'
+    status_on_bad_tool: 400
+    example_observed: >-
+      GET ?tool=bogus_tool → HTTP 400
+      {"error":"Unknown tool \"bogus_tool\". Available: search_jobs, get_job,
+      list_departments, list_locations"}
+    rfc9457: false
+  commerce-graphql:
+    shape: 'GraphQL {"errors":[{"message","locations","path","extensions"}]}'
+    status_on_error: 200 for field errors, 400 for a syntax error
+    rfc9457: false
+  commerce-rest:
+    shape: '{"message": "<message>"}'
+    status_on_unauthenticated: 401
+    example_observed: '{"message":"Missing Bearer token."}'
+    rfc9457: false
+  note: >-
+    Three callable surfaces, three different error envelopes, none of them RFC 9457
+    application/problem+json. See errors/clean-harbors-problem-types.yml.
+rate_limit_signaling:
+  published: false
+  headers_observed: []
+  note: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After header appeared on any response from either
+    surface on 2026-09-05, and no limit is documented anywhere. See
+    rate-limits/clean-harbors-rate-limits.yml.
+idempotency:
+  coverage: none
+  mechanism: none
+  header: null
+  scope: []
+  note: >-
+    Neither surface offers replay protection. The Careers Job Query API is read-only, so
+    idempotency does not apply to it. The commerce GraphQL surface has 168 mutations —
+    including placeOrder, placePurchaseOrder, placeNegotiableQuoteOrder, createCustomerV2
+    and every cart mutation — and the schema declares no Idempotency-Key input, no client
+    request token, and no de-duplication argument on any of them. An agent that retries a
+    timed-out placeOrder has no contract-level protection against placing the order twice.
+    Recorded as `none` rather than `na` because a large mutating surface genuinely exists.
+dry_run_mode:
+  supported: false
+  note: >-
+    No preview, validate-only or simulate argument exists on any mutation. The closest thing
+    in the schema is estimateShippingMethods / estimateTotals, which price a cart without
+    placing an order; that is a pricing preview for one narrow step, not a general rehearsal
+    mode, so it is not counted as dry-run support.
+reversibility:
+  grade: documented
+  applies_to: commerce-graphql
+  note: >-
+    Reversal paths exist in the contract and were read out of the schema. NO WINDOW IS
+    STATED ANYWHERE — Clean Harbors publishes no returns, cancellation or refund policy for
+    store.safety-kleen.com (/return-policy, /returns, /shipping-returns and
+    /terms-and-conditions all returned 404 on 2026-09-05), and the schema carries no
+    deadline field on any of these mutations. Grade is therefore `documented`, not
+    `verified`. No window is asserted here because none was found, and inventing one could
+    cost a buyer money.
+  operations:
+    - action: cancel an order
+      operation: cancelOrder
+      confirm: confirmCancelOrder
+      guest_equivalent: requestGuestOrderCancel
+      window: null
+      window_source: null
+    - action: return a delivered order
+      operation: requestReturn
+      supporting: [addReturnComment, addReturnTracking, removeReturnTracking, confirmReturn]
+      guest_equivalent: requestGuestReturn
+      window: null
+      window_source: null
+    - action: cancel a purchase order
+      operation: cancelPurchaseOrders
+      also: rejectPurchaseOrders
+      window: null
+      window_source: null
+    - action: close or cancel a negotiable quote
+      operation: closeNegotiableQuotes
+      also: [deleteNegotiableQuotes, cancelNegotiableQuoteTemplate]
+      window: null
+      window_source: null
+    - action: undo a cart change
+      operation: removeItemFromCart
+      also: [clearCart, removeCouponFromCart, removeGiftCardFromCart, removeStoreCreditFromCart, removeRewardPointsFromCart]
+      window: null
+      window_source: null
+    - action: reverse a customer deletion
+      operation: null
+      window: null
+      note: >-
+        deleteCustomer, deleteCustomerAddress, deleteWishlist, deleteRequisitionList,
+        deleteCompanyRole and deleteCompanyTeam have NO restore counterpart in the schema.
+        These deletions are one-way as far as the contract is concerned.
+  careers-jobs: na
+cross_links:
+  errors: errors/clean-harbors-problem-types.yml
+  lifecycle: lifecycle/clean-harbors-lifecycle.yml
+  authentication: authentication/clean-harbors-authentication.yml
+  rate_limits: rate-limits/clean-harbors-rate-limits.yml
+  data_model: data-model/clean-harbors-data-model.yml

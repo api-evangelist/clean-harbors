@@ -1,0 +1,30 @@
+generated: '2026-09-05'
+method: generated
+source: >-
+  Authored 2026-09-05 from contracts already in this repo — llms/clean-harbors-llms.txt and
+  mcp/clean-harbors-careers-jobs-manifest.json (both published by Clean Harbors) and
+  graphql/clean-harbors-store-schema.graphql (introspected live). Every operation named in
+  every skill exists in one of those contracts and was called successfully.
+note: >-
+  Clean Harbors publishes no Agent Skills and no AGENTS.md; a search of cleanharbors.com,
+  safety-kleen.com and careers.cleanharbors.com on 2026-09-05 found none. These are ours,
+  generated against the provider's real contracts, and are marked `generated` rather than
+  `searched` for that reason.
+skills:
+  - name: clean-harbors-search-jobs
+    file: clean-harbors-search-jobs.md
+    api: Clean Harbors Careers Job Query API
+    surface: https://careers.cleanharbors.com/api/mcp/jobs
+    auth: none
+    operations: [search_jobs, get_job, list_departments, list_locations]
+    verified: >-
+      All four operations executed live on 2026-09-05, HTTP 200 each.
+  - name: clean-harbors-browse-store-catalog
+    file: clean-harbors-browse-store-catalog.md
+    api: Clean Harbors / Safety-Kleen commerce GraphQL
+    surface: https://store.safety-kleen.com/graphql
+    auth: none for catalog reads; Bearer customer token for customer-scoped fields
+    operations: [products, categories, storeConfig, availableStores, cmsPage, route]
+    verified: >-
+      storeConfig, availableStores, products and categories executed live on 2026-09-05,
+      HTTP 200 each.
