@@ -92,6 +92,8 @@ apis:
     type: DataModel
   - url: skills/clean-harbors-search-jobs.md
     type: AgentSkill
+  - url: examples/clean-harbors-examples.yml
+    type: Examples
 - aid: clean-harbors:store-graphql
   name: Clean Harbors / Safety-Kleen Commerce GraphQL API
   description: Live GraphQL endpoint behind the Safety-Kleen online store and five sibling Clean Harbors
@@ -132,6 +134,10 @@ apis:
     type: Conformance
   - url: skills/clean-harbors-browse-store-catalog.md
     type: AgentSkill
+  - url: examples/clean-harbors-examples.yml
+    type: Examples
+  - url: agentic-access/clean-harbors-agentic-access.yml
+    type: AgenticAccess
 - aid: clean-harbors:customer-portal
   name: Clean Harbors Customer Portal (CLH SaaS)
   tags:
@@ -143,7 +149,7 @@ apis:
   humanURL: https://clhsaas.cleanharbors.com/
   properties:
   - url: https://clhsaas.cleanharbors.com/
-    type: Portal
+    type: X-CustomerPortal
   - url: https://www.cleanharbors.com/chos-reference-guides
     type: Documentation
   description: 'Clean Harbors Online Services (CHOS) — the authenticated web portal where customers create
@@ -190,7 +196,7 @@ common:
   url: https://www.cleanharbors.com/contact-us
 - type: JSONLD
   url: json-ld/clean-harbors-context.jsonld
-- type: Portal
+- type: X-CustomerPortal
   url: https://clhsaas.cleanharbors.com/
 - type: X-SubsidiaryWebsite
   url: https://www.safety-kleen.com/
@@ -212,8 +218,6 @@ common:
   url: errors/clean-harbors-problem-types.yml
 - type: Lifecycle
   url: lifecycle/clean-harbors-lifecycle.yml
-- type: Deprecation
-  url: lifecycle/clean-harbors-lifecycle.yml
 - type: DataModel
   url: data-model/clean-harbors-data-model.yml
 - type: Conformance
@@ -226,6 +230,14 @@ common:
   url: plans/clean-harbors-plans-pricing.yml
 - type: RateLimits
   url: rate-limits/clean-harbors-rate-limits.yml
+- type: AgenticAccess
+  url: agentic-access/clean-harbors-agentic-access.yml
+- type: Examples
+  url: examples/clean-harbors-examples.yml
+- type: SignUp
+  url: https://store.safety-kleen.com/customer/account/create/
+- type: Login
+  url: https://clhsaas.cleanharbors.com/
 - type: Documentation
   url: https://www.cleanharbors.com/chos-reference-guides
 - type: Careers
@@ -248,5 +260,5 @@ maintainers:
 x-enrichment:
   date: '2026-09-05'
   status: enriched
-  artifacts_added: 19
+  artifacts_added: 2
   pass: local-v3
