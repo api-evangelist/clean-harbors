@@ -69,6 +69,12 @@ apis:
   - Careers
   - Job Postings
   - Recruiting
+  - Agent-readable
+  - Public API
+  tags_raw:
+  - Careers
+  - Job Postings
+  - Recruiting
   - Agent Readable
   - Public API
   properties:
@@ -109,6 +115,13 @@ apis:
   humanURL: https://store.safety-kleen.com/
   baseURL: https://store.safety-kleen.com/graphql
   tags:
+  - GraphQL
+  - E-Commerce
+  - B2B Commerce
+  - Adobe Commerce
+  - Safety-Kleen
+  - Catalog
+  tags_raw:
   - GraphQL
   - Ecommerce
   - B2B Commerce
