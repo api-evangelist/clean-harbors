@@ -1,0 +1,161 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Every request below was executed anonymously against a live Clean Harbors host on
+  2026-09-05 and every response body is the real body that came back, truncated only where
+  noted. Clean Harbors publishes no code samples, no request/response examples and no
+  cookbook of any kind — a search of cleanharbors.com, safety-kleen.com,
+  store.safety-kleen.com and careers.cleanharbors.com found none — so these are captures we
+  made, not examples the company ships.
+note: >-
+  Both callable surfaces answer with no credential, which is the whole reason a capture like
+  this is possible. Nothing here required a key, an account or a signed agreement.
+surfaces:
+  - id: careers-jobs
+    base: https://careers.cleanharbors.com/api/mcp/jobs
+    auth: none
+  - id: commerce-graphql
+    base: https://store.safety-kleen.com/graphql
+    auth: none for catalog and store-configuration reads
+examples:
+  - id: careers-tool-manifest
+    surface: careers-jobs
+    title: Discover the available operations
+    request:
+      method: GET
+      url: https://careers.cleanharbors.com/api/mcp/jobs
+    response:
+      status: 200
+      content_type: application/json
+      body: |
+        {"name":"AppVault Career Site MCP Jobs API","description":"Query job openings programmatically. Pass a \"tool\" parameter to select an operation.","tools":[{"name":"search_jobs","description":"Search and filter job openings","params":["search","department","employmentType","location","page","pageSize"]},{"name":"get_job","description":"Get full details for a specific job","params":["jobId"]},{"name":"list_departments","description":"List all departments with job counts","params":[]},{"name":"list_locations","description":"List all locations with job counts","params":[]}]}
+    note: >-
+      A bare GET is the discovery document. Note the params list for search_jobs names
+      `search`, while the company's own llms.txt and the working call below use `query` —
+      the manifest and the implementation disagree on the parameter name.
+
+  - id: careers-search-jobs
+    surface: careers-jobs
+    title: Search open positions, paged
+    request:
+      method: GET
+      url: https://careers.cleanharbors.com/api/mcp/jobs?tool=search_jobs&query=technician&page=1&pageSize=2
+    response:
+      status: 200
+      content_type: application/json
+      truncated: true
+      body: |
+        {"tool":"search_jobs","results":[{"requisitionId":"165235","title":"Oil Sales and Service Rep II","department":"Driver – Bulk","location":"Linden, NJ, USA | Bridgeport, NJ, United States","employmentType":"Full Time","datePosted":"2026-08-26","applyUrl":"https://epyc.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CLH-us/jobs/preview/165235/apply/email","description":"Safety-Kleen Linden, NJ is looking for a Local Class B Route Driver ..."}],"totalCount":1023,"page":1,"pageSize":2,"summary":"Found 1023 jobs"}
+    note: >-
+      1,023 open requisitions at capture time. applyUrl points at Oracle Fusion HCM
+      (epyc.fa.us2.oraclecloud.com), which is where the application itself is filed — the
+      Clean Harbors careers host is the read surface only.
+
+  - id: careers-list-departments
+    surface: careers-jobs
+    title: List departments with job counts
+    request:
+      method: GET
+      url: https://careers.cleanharbors.com/api/mcp/jobs?tool=list_departments
+    response:
+      status: 200
+      content_type: application/json
+      truncated: true
+      body: |
+        {"tool":"list_departments","results":[{"id":"687e8e451c9a05008f6ad30f","name":"687e8e451c9a05008f6ad30f","jobCount":171},{"id":"687e8e68caa656008fb5a899","name":"687e8e68caa656008fb5a899","jobCount":160},{"id":"687e8ed7caa656008fb5ac94","name":"687e8ed7caa656008fb5ac94","jobCount":76}]}
+    note: >-
+      DEFECT, captured verbatim rather than cleaned up: `name` is filled with the same
+      opaque ObjectId as `id` on every row, so the operation returns department counts that
+      no client can label. search_jobs, by contrast, returns a readable department string
+      ("Driver – Bulk"), so the names exist upstream and are being dropped here. Reported as
+      observed; nothing was corrected in this file.
+
+  - id: careers-unknown-tool
+    surface: careers-jobs
+    title: Error envelope for an unknown operation
+    request:
+      method: GET
+      url: https://careers.cleanharbors.com/api/mcp/jobs?tool=bogus_tool
+    response:
+      status: 400
+      content_type: application/json
+      body: |
+        {"error":"Unknown tool \"bogus_tool\". Available: search_jobs, get_job, list_departments, list_locations"}
+    note: >-
+      The error names every valid value, which is unusually agent-friendly for a surface with
+      no documentation. It is not RFC 9457 — see errors/clean-harbors-problem-types.yml.
+
+  - id: graphql-store-config
+    surface: commerce-graphql
+    title: Identify the store behind the endpoint
+    request:
+      method: POST
+      url: https://store.safety-kleen.com/graphql
+      headers:
+        Content-Type: application/json
+      body: |
+        {"query":"{storeConfig{store_code store_name website_name base_url base_currency_code locale}}"}
+    response:
+      status: 200
+      content_type: application/json
+      body: |
+        {"data":{"storeConfig":{"store_code":"en_us","store_name":"USA Store View","website_name":"Clean Harbors USA Website","base_url":"https://store.safety-kleen.com/","base_currency_code":"USD","locale":"en_US"}}}
+    note: >-
+      This is the ownership evidence for the whole GraphQL entry: the endpoint sits on a
+      Safety-Kleen host and reports its own website_name as "Clean Harbors USA Website".
+
+  - id: graphql-product-search
+    surface: commerce-graphql
+    title: Search the catalog with prices and page info
+    request:
+      method: POST
+      url: https://store.safety-kleen.com/graphql
+      headers:
+        Content-Type: application/json
+      body: |
+        {"query":"{products(search:\"oil\",pageSize:2){total_count items{sku name url_key price_range{minimum_price{regular_price{value currency}}}} page_info{current_page page_size total_pages}}}"}
+    response:
+      status: 200
+      content_type: application/json
+      body: |
+        {"data":{"products":{"total_count":277,"items":[{"sku":"1224","name":"Label Used Oil Filters","url_key":"label-used-oil-filters","price_range":{"minimum_price":{"regular_price":{"value":5,"currency":"USD"}}}},{"sku":"3102271","name":"80W-90 Gear Oil (330 Gallon Tote)","url_key":"80w-90-gear-oil-330-gallon-tote","price_range":{"minimum_price":{"regular_price":{"value":8266.5,"currency":"USD"}}}}],"page_info":{"current_page":1,"page_size":2,"total_pages":139}}}}
+    note: >-
+      Anonymous read, real prices. page_info is the page-number pagination recorded in
+      conventions/clean-harbors-conventions.yml; there is no cursor anywhere in the schema.
+
+  - id: graphql-field-error
+    surface: commerce-graphql
+    title: Error envelope for an unknown field
+    request:
+      method: POST
+      url: https://store.safety-kleen.com/graphql
+      headers:
+        Content-Type: application/json
+      body: '{"query":"{notAField{id}}"}'
+    response:
+      status: 200
+      content_type: application/json
+      body: |
+        {"errors":[{"message":"Cannot query field \"notAField\" on type \"Query\".","locations":[{"line":1,"column":2}]}]}
+    note: >-
+      HTTP 200 on an error — standard GraphQL, and worth capturing because an agent keyed on
+      status codes alone will read this failure as a success.
+
+  - id: graphql-authorization-error
+    surface: commerce-graphql
+    title: Customer-scoped field without a token
+    request:
+      method: POST
+      url: https://store.safety-kleen.com/graphql
+      headers:
+        Content-Type: application/json
+      body: '{"query":"{customer{email}}"}'
+    response:
+      status: 403
+      content_type: application/json
+      body: |
+        {"errors":[{"message":"The current customer isn't authorized.","locations":[{"line":1,"column":2}],"path":["customer"],"extensions":{"category":"graphql-authorization"}}],"data":{"customer":null}}
+    note: >-
+      This is the boundary between the anonymous surface and the gated one. `extensions.category`
+      is the only machine-readable error class the endpoint emits. A token comes from the
+      generateCustomerToken mutation — see authentication/clean-harbors-authentication.yml.

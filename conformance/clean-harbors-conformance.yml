@@ -104,6 +104,24 @@ conformance:
       clhsaas.cleanharbors.com, www.safety-kleen.com, store.safety-kleen.com,
       ir.cleanharbors.com and healthcare.cleanharbors.com, and returns the SPA HTML shell on
       careers.cleanharbors.com.
+  - id: soap-wsdl
+    name: SOAP 1.2 / WSDL contract
+    conforms: false
+    evidence: >-
+      The Adobe Commerce SOAP endpoint exists at https://store.safety-kleen.com/soap but
+      publishes no retrievable WSDL. GET /soap?wsdl_list=1 returns HTTP 200 carrying a SOAP
+      Fault ("Internal Error. Details are available in Magento log file"), and
+      /soap?wsdl&services=<service> returns HTTP 503 for magentoStoreStoreRepositoryV1,
+      magentoCatalogApiProductRepositoryV1 and magentoQuoteApiCartManagementV1. The REST
+      Swagger generator fails the same way — /rest/all/schema?services=... returns 503 and
+      /rest/default/schema?services=... returns HTTP 400 {"message":"Specified request cannot
+      be processed."}. Probed 2026-09-05.
+    detail: >-
+      Both of the platform's own contract generators are broken on this instance, which is why
+      GraphQL introspection is the only machine-readable contract this provider has. The 503
+      body leaks base href https://staging2.cleanharbors.com/ — the production storefront is
+      rendering a staging error page. Recorded so a later round does not re-hunt a WSDL that
+      the platform is configured to serve but cannot produce.
 domain_standards:
   - id: epa-e-manifest
     name: EPA RCRA e-Manifest (Hazardous Waste Electronic Manifest Establishment Act)

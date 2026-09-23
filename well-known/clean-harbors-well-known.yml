@@ -5,14 +5,51 @@ source: >-
   and www, the Safety-Kleen subsidiary domain, the CLH SaaS customer portal, the investor
   relations host, the healthcare micro-site, the Adobe Commerce storefront that serves the
   GraphQL contract, and the careers host that serves the llms.txt and the Job Query API.
+  Re-probed the same day with the APIs.json paths (/apis.json, /.well-known/apis.json,
+  /apis.yml) and /.well-known/aauth-resource.json added, plus a per-host negative control.
 note: >-
-  NOTHING WAS FOUND. Every /.well-known/ path 404s on every Clean Harbors host. Two hosts
-  answer 200 for paths they do not serve and must not be read as hits:
-  careers.cleanharbors.com is a Next.js SPA whose catch-all route returns the site shell
-  (text/html, ~50KB) for every /.well-known/* path, and ir.cleanharbors.com sits behind a
-  WAF that answers 403 "Access Denied" to a plain crawler and 404 HTML to a browser
-  User-Agent. Neither is a served document. No WellKnown or SecurityTxt pointer is wired
-  from apis.yml, because a probe recording an absence must not be scored as a presence.
+  NOTHING WAS FOUND. Every /.well-known/ path, every APIs.json path and the AAuth resource
+  path miss on every Clean Harbors host. Two hosts answer 200 or 403 for paths they do not
+  serve and must not be read as hits: careers.cleanharbors.com is a Next.js SPA whose
+  catch-all route returns the site shell (text/html, ~50KB) for every path under /.well-known/
+  AND at the domain root, and ir.cleanharbors.com sits behind a WAF that answers 403 "Access
+  Denied" to a plain crawler and 404 HTML to a browser User-Agent. Neither is a served
+  document. No WellKnown, SecurityTxt or APIsJSON pointer is wired from apis.yml, because a
+  probe recording an absence must not be scored as a presence.
+hit_count: 0
+path_echo_control: passed
+soft_404_control:
+  - host: careers.cleanharbors.com
+    path: /.well-known/clean-harbors-negative-control-7f3ab91c.json
+    status: 200
+    bytes: 51175
+    content_type: text/html
+    verdict: >-
+      FAILED — this host returns HTTP 200 with the career-site HTML shell for a path that
+      cannot exist. Every 200 recorded against careers.cleanharbors.com below is therefore
+      discarded as a catch-all, not a document.
+  - host: www.cleanharbors.com
+    path: /.well-known/clean-harbors-negative-control-7f3ab91c.json
+    status: 404
+    verdict: passed
+  - host: store.safety-kleen.com
+    path: /.well-known/clean-harbors-negative-control-7f3ab91c.json
+    status: 404
+    verdict: passed
+  - host: clhsaas.cleanharbors.com
+    path: /.well-known/clean-harbors-negative-control-7f3ab91c.json
+    status: 404
+    verdict: passed
+  - host: www.safety-kleen.com
+    path: /.well-known/clean-harbors-negative-control-7f3ab91c.json
+    status: 404
+    verdict: passed
+edge_note: >-
+  A request for any path ending in `.yml` returns HTTP 403 with the 17-byte body
+  "Permission denied" on www.cleanharbors.com, cleanharbors.com, www.safety-kleen.com,
+  clhsaas.cleanharbors.com and healthcare.cleanharbors.com. That is a shared edge rule
+  blocking the extension, not a served document and not a wall around one — the JSON
+  serialisation at the same path 404s normally on every one of those hosts.
 hosts:
   - host: www.cleanharbors.com
     documents:
@@ -32,6 +69,15 @@ hosts:
         status: 404
       - path: /.well-known/agent.json
         status: 404
+      - path: /.well-known/aauth-resource.json
+        status: 404
+      - path: /.well-known/apis.json
+        status: 404
+      - path: /apis.json
+        status: 404
+      - path: /apis.yml
+        status: 403
+        result: edge-rule-blocks-yml-extension
   - host: cleanharbors.com
     note: 301 redirects to www.cleanharbors.com; probed paths resolve there.
     documents:
@@ -43,25 +89,15 @@ hosts:
         status: 404
       - path: /.well-known/agent.json
         status: 404
-  - host: clhsaas.cleanharbors.com
-    note: Clean Harbors Online Services (CHOS) authenticated customer portal.
-    documents:
-      - path: /.well-known/security.txt
-        status: 404
-      - path: /.well-known/openid-configuration
-        status: 404
-      - path: /.well-known/oauth-authorization-server
-        status: 404
-      - path: /.well-known/oauth-protected-resource
-        status: 404
-      - path: /.well-known/api-catalog
-        status: 404
-      - path: /.well-known/ai-plugin.json
-        status: 404
-      - path: /.well-known/agent-card.json
-        status: 404
-      - path: /.well-known/agent.json
-        status: 404
+      - path: /.well-known/aauth-resource.json
+        status: 301
+        result: redirect-to-www
+      - path: /.well-known/apis.json
+        status: 301
+        result: redirect-to-www
+      - path: /apis.json
+        status: 301
+        result: redirect-to-www
   - host: www.safety-kleen.com
     documents:
       - path: /.well-known/security.txt
@@ -80,6 +116,15 @@ hosts:
         status: 404
       - path: /.well-known/agent.json
         status: 404
+      - path: /.well-known/aauth-resource.json
+        status: 404
+      - path: /.well-known/apis.json
+        status: 404
+      - path: /apis.json
+        status: 404
+      - path: /apis.yml
+        status: 403
+        result: edge-rule-blocks-yml-extension
   - host: store.safety-kleen.com
     note: >-
       Adobe Commerce storefront; serves the live GraphQL contract at /graphql but publishes
@@ -101,10 +146,19 @@ hosts:
         status: 404
       - path: /.well-known/agent.json
         status: 404
+      - path: /.well-known/aauth-resource.json
+        status: 404
+      - path: /.well-known/ucp.json
+        status: 404
+      - path: /.well-known/apis.json
+        status: 404
+      - path: /apis.json
+        status: 404
   - host: careers.cleanharbors.com
     note: >-
-      SOFT 200 — SPA catch-all. Every path below returned HTTP 200 with text/html of ~50KB
-      (the site shell), not a document. Treated as a miss on all eight paths.
+      SOFT 200 — SPA catch-all, confirmed by a negative control that also returned 200 with
+      the site shell. Every path below returned HTTP 200 with text/html of ~50KB, not a
+      document. Treated as a miss on every path.
     documents:
       - path: /.well-known/security.txt
         status: 200
@@ -130,10 +184,45 @@ hosts:
       - path: /.well-known/agent.json
         status: 200
         result: html-shell
+      - path: /.well-known/aauth-resource.json
+        status: 200
+        result: html-shell
+      - path: /.well-known/apis.json
+        status: 200
+        result: html-shell
+      - path: /apis.json
+        status: 200
+        result: html-shell
+      - path: /apis.yml
+        status: 200
+        result: html-shell
+  - host: clhsaas.cleanharbors.com
+    note: Authenticated customer portal; sign-in page only, no discovery surface.
+    documents:
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /.well-known/aauth-resource.json
+        status: 404
+      - path: /.well-known/apis.json
+        status: 404
+      - path: /apis.json
+        status: 404
+      - path: /apis.yml
+        status: 403
+        result: edge-rule-blocks-yml-extension
   - host: ir.cleanharbors.com
     note: >-
       WAF-fronted Drupal 10. Answers 403 "Access Denied" to a plain crawler; with a browser
-      User-Agent the same paths return 404 HTML. No document is served either way.
+      User-Agent the same paths return 404 HTML, and on the APIs.json re-probe the
+      connection failed outright (curl exit, no status). No document is served either way.
     documents:
       - path: /.well-known/security.txt
         status: 404
@@ -143,6 +232,12 @@ hosts:
         status: 403
       - path: /.well-known/agent.json
         status: 403
+      - path: /.well-known/apis.json
+        status: 0
+        result: connection-failed
+      - path: /apis.json
+        status: 0
+        result: connection-failed
   - host: healthcare.cleanharbors.com
     documents:
       - path: /.well-known/security.txt
@@ -153,3 +248,12 @@ hosts:
         status: 404
       - path: /.well-known/agent.json
         status: 404
+      - path: /.well-known/aauth-resource.json
+        status: 404
+      - path: /.well-known/apis.json
+        status: 404
+      - path: /apis.json
+        status: 404
+      - path: /apis.yml
+        status: 403
+        result: edge-rule-blocks-yml-extension

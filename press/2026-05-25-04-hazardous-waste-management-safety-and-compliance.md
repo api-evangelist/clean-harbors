@@ -1,7 +1,9 @@
 ---
 title: 'Hazardous Waste Management: Safety and Compliance'
 url: https://www.waste360.com/hazardous-waste/hazardous-waste-management-safety-and-compliance
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"Clean Harbors" press release artificial intelligence'
 position: 4
 source: serpapi-google

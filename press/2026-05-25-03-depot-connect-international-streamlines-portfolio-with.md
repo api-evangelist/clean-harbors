@@ -1,7 +1,9 @@
 ---
 title: Depot Connect International Streamlines Portfolio with ...
 url: https://www.prnewswire.com/news-releases/depot-connect-international-streamlines-portfolio-with-sale-of-industrial-and-rail-services-to-clean-harbors-302692747.html
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"Clean Harbors" press release artificial intelligence'
 position: 3
 source: serpapi-google
