@@ -1,0 +1,62 @@
+edges:
+- partner_name: US EPA (RCRA hazardous-waste handler registration)
+  partner: null
+  partner_match: register
+  type: contract
+  channel: regulator-register
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://enviro.epa.gov/envirofacts/rcrainfo/facility-search?handlerId=AKR000206482
+  category: Hazardous-waste handler
+  contract_reference:
+    register: US EPA RCRAInfo handler register (e-Manifest site registry; rcrapublic export HD_REPORTING)
+    spec_file: null
+    standard: RCRA Subtitle C (EPA Form 8700-12 Site ID notification)
+    role: rcra-waste-handler
+    registered_name: CLEAN HARBORS EVIRONMENTAL SERVICES INC
+    owner_name: MICHAEL SLATTERY
+    operator_name: MICHAEL SLATTERY
+    register_id: EPA ID AKR000206482
+    activities:
+    - commercial-tsd
+    - manifest-broker
+    - operating-tsdf
+    - recycler
+    - transporter
+    location: ANCHORAGE, AK
+    matched_domain: cleanharbors.com
+    matched_by: domain
+    identity_source: handler's own contact e-mail domain on its RCRA Site ID notification (no lookup)
+    signal_note: 'participation only: a Site ID notification is not a certification; activities are context; site
+      counts never recorded (breadth is not credit); generators are end users and not read'
+    detected_by: sweep-carbon-environment.py
+    detected: '2026-10-19'
+    other_registrations:
+    - CLEAN HARBORS ENVIRONMENTAL SERVICES (EPA ID AKR000208421)
+    - CLEAN HARBORS EL DORADO, LLC (EPA ID ARD069748192)
+    - CLEAN HARBORS ENVIRONMENTAL SERVICES, INC. (EPA ID ARR000032672)
+    - LENFEST (EPA ID CAC002894245)
+    - CLEAN HARBORS WESTMORLAND LLC (EPA ID CAD000633164)
+    - CLEAN HARBORS OF WILMINGTON (EPA ID CAD044429835)
+    - CLEAN HARBORS SAN JOSE (EPA ID CAD059494310)
+    - CLEAN HARBORS BUTTONWILLOW LLC (EPA ID CAD980675276)
+    - SAFETY-KLEEN OF CALIFORNIA INC (EPA ID CAD980887418)
+    - CLEAN HARBORS SAN JOSE RAIL SPUR TRANSFER FACILITY (EPA ID CAL000191813)
+  detected_by: sweep-carbon-environment.py
+  first_seen: '2026-10-19'
+generated: '2026-10-19'
+method: searched
+source:
+- https://edge.isometric.com/graphql
+- https://public-api.goldstandard.org/projects?page=1&size=100
+- https://puro.earth/puro_facility-sitemap.xml
+- https://www.cdr.fyi/sitemap.xml
+- https://www.icvcm.org/assessment-status/
+- https://rcrapublic.epa.gov/rcra-public-export/rest/api/v1/public/export/current/CSV
+checked:
+- https://edge.isometric.com/graphql
+- https://public-api.goldstandard.org/projects?page=1&size=100
+- https://puro.earth/puro_facility-sitemap.xml
+- https://rcrapublic.epa.gov/rcra-public-export/rest/api/v1/public/export/current/CSV
+- https://www.cdr.fyi/sitemap.xml
+- https://www.icvcm.org/assessment-status/
