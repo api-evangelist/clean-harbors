@@ -1,4 +1,4 @@
-# Clean Harbors (clean-harbors)
+# Clean Harbors
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,61 +64,117 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Clean Harbors is the largest provider of environmental and industrial services in North America, delivering hazardous and non-hazardous waste management, emergency response, industrial cleaning, environmental remediation, and used-oil and solvent recycling through its Safety-Kleen subsidiary. Clean Harbors does not publish a public developer portal or general-purpose REST API surface; programmatic interfaces are limited to the authenticated CLH SaaS customer portal and partner-mediated EDI feeds, plus interoperability with the EPA e-Manifest system.
+Clean Harbors is the largest provider of environmental and industrial services in North America — hazardous and non-hazardous waste management, emergency response, industrial cleaning, remediation, and used-oil and solvent recycling through its Safety-Kleen subsidiary. It runs no developer programme: no developer portal, no API documentation, no SDK in any registry, no GitHub organisation, and no /.well-known/ document on any host. Customers use the authenticated Clean Harbors Online Services portal at clhsaas.cleanharbors.com and the EPA's RCRA e-Manifest programme, whose machine-readable surface belongs to the EPA. Two callable contracts nonetheless run on Clean Harbors hosts, both found by direct probing: an anonymous, fully introspectable GraphQL endpoint at store.safety-kleen.com fronting six brand storefronts on one Adobe Commerce instance, and an unauthenticated Job Query API at careers.cleanharbors.com that the company documents in a published llms.txt.
 
-**URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/clean-harbors/refs/heads/main/apis.yml)
+**Areas:** Adobe Commerce · Emergency Response · Environmental Services · Fortune 1000 · GraphQL · Hazardous Waste · Industrial Services · Job Postings · Manifest Tracking · Recycling · Remediation
 
-## Scope
+## Clean Harbors on APIs.io
 
-- **Type:** Index
-- **Position:** Consumer
-- **Access:** 3rd-Party
+Everything profiled for Clean Harbors is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/clean-harbors/](https://apis.io/providers/clean-harbors/)** — or go straight to one of the APIs or properties below.
 
-## Tags:
+### APIs (4)
 
- - Emergency Response, Environmental Services, Hazardous Waste, Industrial Services, Manifest Tracking, Recycling, Remediation
+- [Clean Harbors Careers Job Query API](https://apis.io/apis/clean-harbors/careers-jobs/) — Unauthenticated JSON API over Clean Harbors' open positions, served from the company's own careers host and documented by the company in its published…
+- [Clean Harbors / Safety-Kleen Commerce GraphQL API](https://apis.io/apis/clean-harbors/store-graphql/) — Live GraphQL endpoint behind the Safety-Kleen online store and five sibling Clean Harbors brand storefronts (Thermo Fluids, Noble Oil, Emerald Renewable…
+- [Clean Harbors Customer Portal (CLH SaaS)](https://apis.io/apis/clean-harbors/customer-portal/) — Clean Harbors Online Services (CHOS) — the authenticated web portal where customers create waste profiles, raise drum and bulk service requests, manage…
+- [EPA e-Manifest Integration](https://apis.io/apis/clean-harbors/e-manifest/) — Clean Harbors participates in the EPA's RCRA e-Manifest programme for hazardous-waste manifest tracking. Its own e-Manifest page states the company "is in…
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-03-23
-- **Modified:** 2026-04-23
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### Agentic access (1)
 
-No public REST APIs are currently published by Clean Harbors. The artifacts below describe the closest programmatic surfaces available to customers and partners.
+Which operations an agent can call, which act, and which need a human in the loop.
 
-### Clean Harbors Customer Portal (CLH SaaS)
-Authenticated web portal for Clean Harbors customers to submit service requests, view manifests and shipments, retrieve invoices and reports, and manage account profile information.
+- [Clean Harbors Agentic Access](https://apis.io/agentic-access/clean-harbors/clean-harbors-agentic-access/)
 
-**Human URL:** [https://clhsaas.cleanharbors.com/](https://clhsaas.cleanharbors.com/)
+#### JSON-LD (1)
 
-#### Tags:
+Linked-data contexts for the provider's vocabulary.
 
- - Customer Portal, Manifests, Service Requests
+- [Clean Harbors Context](https://apis.io/jsonld/clean-harbors/clean-harbors-context/)
 
-### EPA e-Manifest Integration
-Clean Harbors interoperates with the federal EPA e-Manifest system for electronic creation, signing, and tracking of hazardous-waste manifests under RCRA. The e-Manifest system itself exposes APIs at manifest.epa.gov.
+#### Security (2)
 
-**Human URL:** [https://www.epa.gov/e-manifest](https://www.epa.gov/e-manifest)
+Authentication, trust centre, and vulnerability disclosure.
 
-#### Tags:
+- [Clean Harbors Authentication](https://apis.io/security/clean-harbors/clean-harbors-authentication/)
+- [Clean Harbors Domain Security](https://apis.io/security/clean-harbors/clean-harbors-domain-security/)
 
- - EPA, e-Manifest, RCRA
+#### Plans and pricing (1)
 
-## Common Properties
+Published plans, tiers and prices.
+
+- [Clean Harbors Plans Pricing](https://apis.io/plans/clean-harbors/clean-harbors-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Clean Harbors Rate Limits](https://apis.io/rate-limits/clean-harbors/clean-harbors-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.cleanharbors.com/)
-- [Customer Portal](https://clhsaas.cleanharbors.com/)
-- [Safety-Kleen](https://www.safety-kleen.com/)
-- [Investor Relations](https://investors.cleanharbors.com/)
-- [Privacy Policy](https://www.cleanharbors.com/privacy-policy)
-- [Terms of Service](https://www.cleanharbors.com/terms-of-use)
+- [Documentation](https://www.cleanharbors.com/chos-reference-guides)
+- [Sign up](https://store.safety-kleen.com/customer/account/create/)
 - [Support](https://www.cleanharbors.com/contact-us)
-- [JSON-LD Context](json-ld/clean-harbors-context.jsonld)
-- [Naftiko Capabilities](capabilities/clean-harbors-capabilities.yml)
+- [Blog](https://www.cleanharbors.com/about-us/blog)
+- [Terms of service](https://www.cleanharbors.com/terms-of-service)
+- [Privacy policy](https://www.cleanharbors.com/privacy-policy)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
+**Kin Score 36.1** — thin · rubric 0.24.0 · scored 2026-10-17
 
-**Email:** kin@apievangelist.com
+| Facet | Score |
+|---|---|
+| Discoverability | 79.5 |
+| Contract quality | 53.1 |
+| Contract governance | 4.5 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 30.4 |
+| Access clarity | 34.2 |
+
+**Agent readiness 22.7** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 24.5** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/clean-harbors/](https://apis.io/providers/clean-harbors/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Clean Harbors: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/clean-harbors/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
